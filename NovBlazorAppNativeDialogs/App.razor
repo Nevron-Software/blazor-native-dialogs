@@ -1,0 +1,36 @@
+﻿@using Nevron.Nov;
+@using Nevron.Nov.WebAssembly;
+@using Nevron.Nov.IO;
+
+@inject IJSRuntime JSRuntime;
+@inject NavigationManager NavigationManager;
+
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code
+{
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		// Apply license for redistribution here. You can skip this code when evaluating NOV.
+		// NLicenseManager.Instance.SetLicense(new NLicense("LICENSE KEY"));
+		
+		// Install NOV
+		NNovApplicationInstaller.Install(
+			JSRuntime,
+			NavigationManager.BaseUri
+		);
+	}
+}

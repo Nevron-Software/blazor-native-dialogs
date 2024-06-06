@@ -1,0 +1,55 @@
+﻿@page "/"
+
+@using Nevron.Nov;
+@using Nevron.Nov.Dom
+@using Nevron.Nov.Layout
+@using Nevron.Nov.UI;
+@using Nevron.Nov.WebAssembly;
+
+<PageTitle>NOV Blazor Application</PageTitle>
+<NNovWidgetHost @ref="m_NovHost" TWidget="NContentHolder" Style="width:100vw; height:100vh;" />
+
+<dialog id="htmlDialog">
+	<p>This is an HTML 5 dialog.</p>
+	<button autofocus onclick="onCloseButtonClick()">Close</button>
+</dialog>
+
+<script>
+	function showModal() {
+		document.getElementById('htmlDialog').showModal();
+	}
+
+	function onCloseButtonClick()
+	{
+		document.getElementById('htmlDialog').close();
+	}
+</script>
+
+@code
+{
+	private NNovWidgetHost<NContentHolder> m_NovHost;
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		base.OnAfterRender(firstRender);
+		if (firstRender)
+		{
+			m_NovHost.Widget.Content = CreateNovContent();
+		}
+	}
+
+	private NWidget CreateNovContent()
+	{
+		NButton button = new NButton("Open HTML Dialog");
+		button.HorizontalPlacement = ENHorizontalPlacement.Center;
+		button.VerticalPlacement = ENVerticalPlacement.Center;
+		button.Click += Button_Click;
+
+		return button;
+	}
+
+	private void Button_Click(NEventArgs args)
+	{
+		NJsInterop.InvokeVoid("showModal", null);
+	}
+}
